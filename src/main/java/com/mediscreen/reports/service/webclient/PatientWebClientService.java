@@ -12,12 +12,21 @@ import java.util.List;
 public class PatientWebClientService {
     // Declare the base url
     private final String BASE_URL = "http://localhost:8081";
-    // Declare the path for patient list
+    // Declare the path to get patient list
     private final String PATH_PATIENT_LIST = "/getPatientList";
+    // Declare the path to get patient
+    private final String PATH_PATIENT = "/getPatient";
+    //Declare the PatientId parameter name to use in the WebClient request
+    private final String PATIENT_ID = "?patientId=";
 
-    //Define the patients service URI (for patient list)
-    private final String getListPatientServiceUri() {
+    //Define the patients URI (for patient list)
+    private final String getListPatientUri() {
         return BASE_URL + PATH_PATIENT_LIST;
+    }
+
+    //Define the patient URI (for getting single patient)
+    private final String getPatientUri() {
+        return BASE_URL + PATH_PATIENT + PATIENT_ID;
     }
 
     /**
@@ -28,10 +37,25 @@ public class PatientWebClientService {
     public List<PatientModel> getListPatients() {
         Flux<PatientModel> getPatientList= WebClient.create()
                 .get()
-                .uri(getListPatientServiceUri())
+                .uri(getListPatientUri())
                 .retrieve()
                 .bodyToFlux(PatientModel.class);
         List<PatientModel> patientList = getPatientList.collectList().block();
         return patientList;
+    }
+
+    /**
+     * Web Client request to server-service "patients" for getting a patient according to its patientId
+     *
+     * @return PatientModel of the patient
+     */
+    public PatientModel getPatient(int patientId) {
+        Mono<PatientModel> getPatient= WebClient.create()
+                .get()
+                .uri(getPatientUri() + patientId)
+                .retrieve()
+                .bodyToMono(PatientModel.class);
+        PatientModel patient = getPatient.block();
+        return patient;
     }
 }

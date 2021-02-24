@@ -2,11 +2,13 @@ package com.mediscreen.reports.service.webclient;
 
 import com.mediscreen.reports.model.NoteModel;
 import com.mediscreen.reports.model.PatientModel;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 
+@Service
 public class RecordWebClientService {
 
     // Declare the base url
