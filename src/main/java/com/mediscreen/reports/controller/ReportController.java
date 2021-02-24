@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class PatientController {
+public class ReportController {
 
- /*   @Autowired
+  /*  @Autowired
     RecordWebClientService recordWebClientService;
 
     @GetMapping("/getListNotes")
@@ -19,5 +19,5 @@ public class PatientController {
         return recordWebClientService.getListNotesPatient(patientId);
     }
 
-  */
+   */
 }
