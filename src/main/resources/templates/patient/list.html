@@ -37,12 +37,6 @@
 				<th>Gender</th>
 				<th>Street</th>
 				<th>City</th>
-				<th>Postcode</th>
-				<th>District</th>
-				<th>State</th>
-				<th>Country</th>
-				<th>Email</th>
-				<th>Phone n°</th>
 				<th>Action</th>
 			</tr>
 			</thead>
@@ -55,15 +49,8 @@
 				<td style="width: 3% "><span th:text="${patient.gender}"> N/A </span></td>
 				<td style="width: 8% "><span th:text="${patient.address.street}"> N/A </span></td>
 				<td style="width: 6% "><span th:text="${patient.address.city}"> N/A </span></td>
-				<td style="width: 5% "><span th:text="${patient.address.postcode}"> N/A </span></td>
-				<td style="width: 8% "><span th:text="${patient.address.district}"> N/A </span></td>
-				<td style="width: 8% "><span th:text="${patient.address.state}"> N/A </span></td>
-				<td style="width: 8% "><span th:text="${patient.address.country}"> N/A </span></td>
-				<td style="width: 13% "><span th:text="${patient.emailAddress}"> N/A </span></td>
-				<td style="width: 8% "><span th:text="${patient.phoneNumber}"> N/A </span></td>
 				<td style="width: 10%" class="text-center">
-					<a th:href="@{/patient/update/{id}(id=${patient.id})}">Edit</a>&nbsp;|&nbsp;
-					<a th:href="@{/patient/delete/{id}(id=${patient.id})}"  onclick="return confirm('Are you sure you want to delete this patient?')")>Delete</a>
+					<a th:href="@{/report/consultation/{patientId}(patientId=${patient.id})}")>Reports</a>
 				</td>
 			</tr>
 			</tbody>

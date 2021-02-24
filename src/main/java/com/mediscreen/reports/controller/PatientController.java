@@ -21,7 +21,7 @@ public class PatientController {
     @Autowired
     PatientWebClientService patientWebClientService;
 
- /**
+    /**
      * HTTP GET request to get the ModelAndView patient/list
      * Adds attribute "patients" to the model, containing all patients available in DB
      *
