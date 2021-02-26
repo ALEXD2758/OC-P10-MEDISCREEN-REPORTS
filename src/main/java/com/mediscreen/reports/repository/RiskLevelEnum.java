@@ -7,4 +7,5 @@ public enum RiskLevelEnum {
     EARLYONSET(),
     BORDERLINE(),
     INDANGER(),
+    NOINFO(),
 }

@@ -27,7 +27,7 @@ public class ReportService {
     }
 
     /**
-     * Method used to set up a Demographics Model from a Patient Model with a specific patientId
+     * Set up a Demographics Model from a Patient Model with a specific patientId
      *
      * @param patientId
      * @return a demographicsModel
@@ -50,7 +50,7 @@ public class ReportService {
     }
 
     /**
-     * Method used for building a list with all values contained in DiseaseEnum
+     * Create a list with all values contained in DiseaseEnum
      * @return a list of DiseaseEnum
      */
     public List<DiseaseEnum> getListDiseases() {
@@ -58,7 +58,7 @@ public class ReportService {
     }
 
     /**
-     * Method used for building a list with all values contained in RiskLevelEnum
+     * Create a list with all values contained in RiskLevelEnum
      * @return a list of RiskLevelEnum
      */
     public List<RiskLevelEnum> getListRiskLevels() {
@@ -101,7 +101,8 @@ public class ReportService {
         List<TriggerTermsEnum> triggersList = getListTriggerTerms();
         AtomicInteger nbTriggersNote = new AtomicInteger();
         triggersList.forEach(tl -> {
-            if (noteModel.getComment().contains(tl.toString())) {
+            String commentUpperCaseWithoutSpace = noteModel.getComment().toUpperCase().replaceAll(" ","");
+            if (commentUpperCaseWithoutSpace.contains(tl.toString())) {
                 nbTriggersNote.incrementAndGet();
             }
         });
@@ -109,7 +110,7 @@ public class ReportService {
     }
 
     /**
-     * Determines through if/else if statements risk level of the patient
+     * Determine through if/else if statements risk level of the patient
      * @param demographicsModel
      * @param listNotes the list of NoteModel
      * @return value of RiskLevelEnum
@@ -136,7 +137,7 @@ public class ReportService {
         } else if (nbTriggers >= 8 && age >= 30) {
             return RiskLevelEnum.EARLYONSET;
         }
-        return RiskLevelEnum.NONE;
+        return RiskLevelEnum.NOINFO;
     }
 
     /**
