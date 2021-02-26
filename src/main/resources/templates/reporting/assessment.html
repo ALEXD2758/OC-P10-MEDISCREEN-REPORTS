@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Patient View List</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+</head>
+<body style="
+    width: 900px;
+">
+<div class="container" style=" margin-left: 35px;">
+    <div class="row" style=" width: 900px;">
+
+        <div class="col-6">
+            <h4>Assessment patient:</h4>
+        </div>
+        <br>
+        <div class="col-6 text-right">
+            <a href="/">Going to Home view now!</a>
+        </div>
+    </div>
+
+        <div class="row">Given name:&nbsp;<span style="font-weight: bold;" th:text="${demographicsPatient.givenName}"></span></div>
+        <div class="row">Family name:&nbsp;<span style="font-weight: bold;" th:text="${demographicsPatient.familyName}"></span></div>
+        <div class="row">Age:&nbsp;<span th:text="${demographicsPatient.age}"></span></div>
+        <div class="row">Gender:&nbsp;<span th:text="${demographicsPatient.gender}"></span></div>
+        <div class="row">Email address:&nbsp;<span th:text="${demographicsPatient.emailAddress}"></span></div>
+        <div class="row">Phone number:&nbsp;<span th:text="${demographicsPatient.phoneNumber}"></span></div>
+    <br>
+    <div class="row">
+        <h5>Risk evaluation per type of disease for the patient:</h5>
+        <table class="table table-bordered" style="width: 900px;">
+            <thead>
+            <tr>
+                <th>Disease</th>
+                <th>Risk Level</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="report : ${reportPatient}">
+                <td style="width: 2% "><span th:text="${report.disease}"> N/A </span></td>
+                <td style="width: 2% "><span th:text="${report.riskLevel}"> N/A </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
