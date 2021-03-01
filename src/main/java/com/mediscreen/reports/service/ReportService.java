@@ -74,22 +74,22 @@ public class ReportService {
     }
 
     /**
-     * Method used for DIABETE disease: iterate through each NoteModel present in the List<NoteModel> to calculate the
+     * Method used for DIABETES disease: iterate through each NoteModel present in the List<NoteModel> to calculate the
      * total number of triggers present in the list
-     * Call numberTriggersDiabeteDiseaseInNote in the lambda expression as a way to check if the NoteModel contains
+     * Call numberTriggersDiabetesDiseaseInNote in the lambda expression as a way to check if the NoteModel contains
      * more than one trigger
      *
      * @param listNotes the list of NoteModel
      * @return int of the final number of triggers
      */
-    public final int numberTriggersDiabeteDisease(List<NoteModel> listNotes) {
+    public final int numberTriggersDiabetesDisease(List<NoteModel> listNotes) {
          int finalNbTriggersInNoteList = listNotes.stream()
-                 .mapToInt(ln -> numberTriggersDiabeteDiseaseInNote(ln).intValue()).sum();
+                 .mapToInt(ln -> numberTriggersDiabetesDiseaseInNote(ln).intValue()).sum();
         return finalNbTriggersInNoteList;
     }
 
     /**
-     * Method used for DIABETE disease: iterate through each NoteModel present in the List<NoteModel> to calculate the
+     * Method used for DIABETES disease: iterate through each NoteModel present in the List<NoteModel> to calculate the
      * total number of triggers present in the list
      * Initialize to zero an AtomicInteger and iterate through each trigger present in TriggerTermsEnum and check if
      * it contains a string of the comment of NoteModel. Add +1 if true, nothing if false
@@ -97,7 +97,7 @@ public class ReportService {
      * @param noteModel the NoteModel
      * @return int the number of trigger terms matching with inside the note comment
      */
-    public AtomicInteger numberTriggersDiabeteDiseaseInNote(NoteModel noteModel) {
+    public AtomicInteger numberTriggersDiabetesDiseaseInNote(NoteModel noteModel) {
         List<TriggerTermsEnum> triggersList = getListTriggerTerms();
         AtomicInteger nbTriggersNote = new AtomicInteger();
         triggersList.forEach(tl -> {
@@ -111,47 +111,62 @@ public class ReportService {
 
     /**
      * Determine through if/else if statements risk level of the patient
+     *
      * @param demographicsModel
      * @param listNotes the list of NoteModel
      * @return value of RiskLevelEnum
      */
-    public RiskLevelEnum riskLevelDiabeteDisease(DemographicsModel demographicsModel, List<NoteModel> listNotes) {
+    public RiskLevelEnum riskLevelDiabetesDisease(DemographicsModel demographicsModel, List<NoteModel> listNotes) {
         int age = demographicsModel.getAge();
         String gender = demographicsModel.getGender();
-        int nbTriggers = numberTriggersDiabeteDisease(listNotes);
+        int nbTriggers = numberTriggersDiabetesDisease(listNotes);
 
+        //CONDITION STATEMENT FOR DETERMINING "NONE" RISK LEVEL
         if (nbTriggers == 0) {
             return RiskLevelEnum.NONE;
-        } else if (nbTriggers == 2 && age >= 30) {
+        }
+        //CONDITION STATEMENT FOR DETERMINING "BORDERLINE" RISK LEVEL
+          else if (nbTriggers == 2 && age >= 30) {
             return RiskLevelEnum.BORDERLINE;
-        } else if (nbTriggers == 3 && age < 30 && gender.equals("MALE")) {
+        }
+        //CONDITION STATEMENTS FOR DETERMINING "INDANGER" RISK LEVEL
+          else if (nbTriggers == 3 && age < 30 && gender.equals("MALE")) {
             return RiskLevelEnum.INDANGER;
         } else if (nbTriggers == 4 && age < 30 && gender.equals("FEMALE")) {
             return RiskLevelEnum.INDANGER;
         } else if (nbTriggers == 6 && age >= 30) {
             return RiskLevelEnum.INDANGER;
-        } else if (nbTriggers == 5 && age < 30 && gender.equals("MALE")) {
+        }
+        //CONDITION STATEMENT FOR DETERMINING "EARLYONSET" RISK LEVEL
+          else if (nbTriggers == 5 && age < 30 && gender.equals("MALE")) {
             return RiskLevelEnum.EARLYONSET;
         } else if (nbTriggers == 7 && age < 30 && gender.equals("FEMALE")) {
             return RiskLevelEnum.EARLYONSET;
         } else if (nbTriggers >= 8 && age >= 30) {
             return RiskLevelEnum.EARLYONSET;
         }
+        //CONDITION STATEMENT FOR DETERMINING "NOINFO" RISK LEVEL
         return RiskLevelEnum.NOINFO;
     }
 
     /**
      * Create a new ReportModel list and inject each type of disease with its associated risk level for the patient
+     * TODO: You can use this method to add all other type of diseases in a ReportModel
+     *
      * @param demographicsModel
      * @param listNotes the list of NoteModel
      * @return a list of ReportModel
      */
     public List<ReportModel> listRiskLevel(DemographicsModel demographicsModel, List<NoteModel> listNotes) {
+        //CREATE A NEW REPORT MODEL LIST
         List<ReportModel> listReport = new ArrayList<>();
-        ReportModel diabeteReport = new ReportModel();
-        diabeteReport.setDisease(DiseaseEnum.DIABETE);
-        diabeteReport.setRiskLevel(riskLevelDiabeteDisease(demographicsModel, listNotes));
-        listReport.add(diabeteReport);
+        //CREATE A NEW REPORT MODEL FOR DIABETES DISEASE WITH ENUM CLASS AND THE RISK LEVEL DETERMINED FOR THE PATIENT
+        ReportModel diabetesReport = new ReportModel();
+        diabetesReport.setDisease(DiseaseEnum.DIABETES);
+        diabetesReport.setRiskLevel(riskLevelDiabetesDisease(demographicsModel, listNotes));
+
+        //ADD THE DIABETES REPORT MODEL TO THE LIST OF REPORT MODEL
+        listReport.add(diabetesReport);
         return listReport;
     }
 }

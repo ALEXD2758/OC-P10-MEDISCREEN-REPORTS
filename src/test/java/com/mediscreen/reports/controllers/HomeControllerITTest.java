@@ -1,4 +1,4 @@
-package com.mediscreen.reports.controllers;
+/*package com.mediscreen.reports.controllers;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,3 +44,5 @@ public class HomeControllerITTest {
         Assert.assertTrue(result.getResponse().getContentAsString().contains(response));
     }
 }
+
+ */

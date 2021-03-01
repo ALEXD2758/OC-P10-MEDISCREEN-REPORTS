@@ -36,9 +36,15 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.9'
 
     //JUnit dependency
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.0'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")
     //Spring Boot starter test - for testing
-    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+
+}
+
+test {
+    useJUnitPlatform()
 }
 
 // JACOCO TOOL VERSION

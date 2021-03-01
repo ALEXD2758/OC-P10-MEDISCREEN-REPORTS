@@ -47,6 +47,7 @@ public class PatientWebClientService {
     /**
      * Web Client request to server-service "patients" for getting a patient according to its patientId
      *
+     * @param patientId the int of the patient Id
      * @return PatientModel of the patient
      */
     public PatientModel getPatient(int patientId) {
