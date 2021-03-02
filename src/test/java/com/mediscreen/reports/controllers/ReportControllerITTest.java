@@ -76,7 +76,7 @@ public class ReportControllerITTest {
 
     public PatientModel patientModel1() {
 
-        LocalDate date = new LocalDate(2014, 01, 01);
+        LocalDate date = new LocalDate(1990, 11, 16);
         PatientModel patientModel1 = new PatientModel();
         patientModel1.setId(2);
         patientModel1.setGivenName("John");
@@ -84,15 +84,15 @@ public class ReportControllerITTest {
         patientModel1.setBirthdate(date);
         patientModel1.setGender("MALE");
         patientModel1.setAddress(addressModel1());
-        patientModel1.setEmailAddress("EmailTest1@email.com");
-        patientModel1.setPhoneNumber("004678925899");
+        patientModel1.setEmailAddress("Dubois_Alexandre@live.fr");
+        patientModel1.setPhoneNumber("0499779639");
         return patientModel1;
     }
 
     public DemographicsModel demographicsModel() {
         DemographicsModel demographicsModel = new DemographicsModel();
-        demographicsModel.setGivenName("Alexandre");
-        demographicsModel.setFamilyName("Dubois");
+        demographicsModel.setGivenName("John");
+        demographicsModel.setFamilyName("Boyd");
         demographicsModel.setAge(30);
         demographicsModel.setGender("MALE");
         demographicsModel.setEmailAddress("Dubois_Alexandre@live.fr");
@@ -138,20 +138,13 @@ public class ReportControllerITTest {
         reportModel.setRiskLevel(RiskLevelEnum.NONE);
         listReport.add(reportModel);
 
-        DemographicsModel demographicsModel1 = new DemographicsModel();
-        demographicsModel1.setGivenName("Alexandre");
-        demographicsModel1.setFamilyName("Dubois");
-        demographicsModel1.setAge(30);
-        demographicsModel1.setGender("MALE");
-        demographicsModel1.setEmailAddress("Dubois_Alexandre@live.fr");
-        demographicsModel1.setPhoneNumber("0499779639");
 
         //ACT
         doReturn(patientModel1())
                 .when(patientWebClientService)
                 .getPatient(2);
 
-        doReturn(demographicsModel1)
+        doReturn(demographicsModel())
                 .when(reportService)
                 .getDemographicsFromPatientModel(patientModel1());
 
