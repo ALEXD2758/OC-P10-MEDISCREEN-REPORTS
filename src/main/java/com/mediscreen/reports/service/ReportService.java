@@ -29,11 +29,9 @@ public class ReportService {
     /**
      * Set up a Demographics Model from a Patient Model with a specific patientId
      *
-     * @param patientId
      * @return a demographicsModel
      */
-    public DemographicsModel getDemographicsFromPatientModel(int patientId) {
-        PatientModel patient = patientWebClientService.getPatient(patientId);
+    public DemographicsModel getDemographicsFromPatientModel(PatientModel patient) {
         DemographicsModel demographicsPatient = new DemographicsModel();
 
         //Call function agePatient for calculating the age from LocalDate (java time)

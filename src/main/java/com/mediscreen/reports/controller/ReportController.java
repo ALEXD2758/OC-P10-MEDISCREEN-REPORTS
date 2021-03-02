@@ -2,16 +2,16 @@ package com.mediscreen.reports.controller;
 
 import com.mediscreen.reports.model.DemographicsModel;
 import com.mediscreen.reports.model.NoteModel;
+import com.mediscreen.reports.model.PatientModel;
 import com.mediscreen.reports.model.ReportModel;
 import com.mediscreen.reports.service.ReportService;
+import com.mediscreen.reports.service.webclient.PatientWebClientService;
 import com.mediscreen.reports.service.webclient.RecordWebClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -22,18 +22,10 @@ public class ReportController {
     RecordWebClientService recordWebClientService;
 
     @Autowired
-    ReportService reportService;
+    PatientWebClientService patientWebClientService;
 
-    /**
-     * HTTP GET request for getting the demographics of a specific patient, by its patientId
-     * @param patientId Integer of the patientId
-     * @return DemographicsModel of a patient
-     */
-    @GetMapping("/getDemographic")
-    @ResponseBody
-    public DemographicsModel getDemographic(@RequestParam Integer patientId) {
-        return reportService.getDemographicsFromPatientModel(patientId);
-    }
+    @Autowired
+    ReportService reportService;
 
     /**
      * HTTP GET request for getting the view reporting/assessment with the demographics of a patient as well as
@@ -46,7 +38,8 @@ public class ReportController {
      */
     @GetMapping("/reporting/assessment/{patientId}")
     public String reportingAssessment(@PathVariable("patientId") Integer patientId, Model model) {
-        DemographicsModel demographicsModel = getDemographic(patientId);
+        PatientModel patient = patientWebClientService.getPatient(patientId);
+        DemographicsModel demographicsModel = reportService.getDemographicsFromPatientModel(patient);
 
         List<NoteModel> listNotes = recordWebClientService.getListNotesPatient(patientId);
         List<ReportModel> listReport = reportService.listRiskLevel(demographicsModel, listNotes);

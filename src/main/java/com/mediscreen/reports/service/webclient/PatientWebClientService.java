@@ -43,6 +43,14 @@ public class PatientWebClientService {
         List<PatientModel> patientList = getPatientList.collectList().block();
         return patientList;
     }
+    /*
+                .onStatus(HttpStatus::is4xxClientError, response ->
+                Mono.error(new MyCustomException())
+            )
+            .onStatus(HttpStatus::is5xxServerError, response ->
+                Mono.error(new MyCustomException())
+            )
+     */
 
     /**
      * Web Client request to server-service "patients" for getting a patient according to its patientId
