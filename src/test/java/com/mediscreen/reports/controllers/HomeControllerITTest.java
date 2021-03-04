@@ -44,7 +44,7 @@ public class HomeControllerITTest {
         String response = "Mediscreen";
         MvcResult result = mockMvc.perform(get("/"))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("home"))
                 .andReturn();
         Assert.assertTrue(result.getResponse().getContentAsString().contains(response));

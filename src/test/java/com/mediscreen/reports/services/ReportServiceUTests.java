@@ -5,19 +5,26 @@ import com.mediscreen.reports.repository.DiseaseEnum;
 import com.mediscreen.reports.repository.RiskLevelEnum;
 import com.mediscreen.reports.repository.TriggerTermsEnum;
 import com.mediscreen.reports.service.ReportService;
+import com.mediscreen.reports.service.webclient.PatientWebClientService;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.net.ConnectException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -25,6 +32,9 @@ public class ReportServiceUTests {
 
     @Autowired
     ReportService reportService;
+
+    @MockBean
+    private PatientWebClientService patientWebClientService;
 
     public AddressModel addressModel1() {
         AddressModel addressModel1 = new AddressModel();
@@ -145,11 +155,16 @@ public class ReportServiceUTests {
         Assert.assertTrue(triggerTermsEnumList.size() == 11);
     }
 
+
     @Test
     @DisplayName("getDemographicsFromPatientModel returns correct DemographicsModel")
-    public void getDemographicsFromPatientModelShouldReturnCorrectDemographicsModel() {
+    public void getDemographicsFromPatientModelShouldReturnCorrectDemographicsModel() throws ConnectException {
 
-        DemographicsModel triggerTermsEnumList = reportService.getDemographicsFromPatientModel(patientModel1());
+        doReturn(patientModel1())
+                .when(patientWebClientService)
+                .getPatient(2);
+
+        DemographicsModel triggerTermsEnumList = reportService.getDemographicsFromPatientModel(2);
         Assert.assertTrue(triggerTermsEnumList.getGivenName().equals("John"));
         Assert.assertTrue(triggerTermsEnumList.getAge() == 7);
         Assert.assertTrue(triggerTermsEnumList.getGender().equals("MALE"));

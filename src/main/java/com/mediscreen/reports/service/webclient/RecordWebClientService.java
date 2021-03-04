@@ -10,8 +10,10 @@ import java.util.List;
 @Service
 public class RecordWebClientService {
 
-    // Declare the base url
-    private final String BASE_URL = "http://localhost:8082";
+    // Declare the base url (for docker deployment)
+    private final String BASE_URL = "http://records:8082";
+    // Declare the base url (for localhost)
+    private final String BASE_URL_LOCALHOST = "http://localhost:8082";
     // Declare the path for patient list
     private final String PATH_NOTE_LIST = "/getNoteList";
     //Declare the PatientId parameter name to use in the WebClient request
@@ -19,7 +21,7 @@ public class RecordWebClientService {
 
     //Define the listNotesPatientService URI (for patient list)
     private final String getNotesListPatientServiceUri() {
-        return BASE_URL + PATH_NOTE_LIST + PATIENT_ID;
+        return BASE_URL_LOCALHOST + PATH_NOTE_LIST + PATIENT_ID;
     }
 
     /**

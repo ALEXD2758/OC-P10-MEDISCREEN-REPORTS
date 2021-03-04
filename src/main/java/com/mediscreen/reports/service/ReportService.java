@@ -8,8 +8,10 @@ import com.mediscreen.reports.repository.DiseaseEnum;
 import com.mediscreen.reports.repository.RiskLevelEnum;
 import com.mediscreen.reports.repository.TriggerTermsEnum;
 import com.mediscreen.reports.service.webclient.PatientWebClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,8 @@ public class ReportService {
     private PatientWebClientService patientWebClientService;
     private AgeCalculatorService ageCalculatorService;
 
-    public ReportService(PatientWebClientService patientWebClientService, AgeCalculatorService ageCalculatorService) {
+
+    public ReportService(@Autowired PatientWebClientService patientWebClientService, @Autowired AgeCalculatorService ageCalculatorService) {
         this.patientWebClientService = patientWebClientService;
         this.ageCalculatorService = ageCalculatorService;
     }
@@ -31,8 +34,10 @@ public class ReportService {
      *
      * @return a demographicsModel
      */
-    public DemographicsModel getDemographicsFromPatientModel(PatientModel patient) {
+    public DemographicsModel getDemographicsFromPatientModel(Integer patientId) {
         DemographicsModel demographicsPatient = new DemographicsModel();
+
+        PatientModel patient = patientWebClientService.getPatient(patientId);
 
         //Call function agePatient for calculating the age from LocalDate (java time)
         int agePatient = ageCalculatorService.agePatient(patient.getBirthdate().toString());

@@ -10,7 +10,8 @@ import java.time.format.DateTimeFormatter;
 public class AgeCalculatorService {
 
     /**
-     * Function used for calculating the age of a patient according to the birthdate (originally with joda.time library)
+     * Function used for calculating the age of a patient according to the birthdate (originally with joda.time library
+     * in patients microservice)
      * Create a DateTimeFormatter of "yyyy-MM-d" pattern to be able to parse through the String of birthdate
      * with that specific formatter
      * DO NOT change format to "yyyy-MM-dd" as it will generate an error of date parsing from the "day"

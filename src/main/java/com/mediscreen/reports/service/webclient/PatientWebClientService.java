@@ -1,23 +1,31 @@
 package com.mediscreen.reports.service.webclient;
 
+//import com.mediscreen.reports.exception.PatientIdNotFoundException;
 import com.mediscreen.reports.model.PatientModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.ConnectException;
 import java.util.List;
 
 @Service
 public class PatientWebClientService {
-    // Declare the base url
-    private final String BASE_URL = "http://localhost:8081";
+    // Declare the base url (for docker deployment)
+    private final String BASE_URL = "http://patients:8081";
+    // Declare the base url (for localhost)
+    private final String BASE_URL_LOCALHOST = "http://localhost:8081";
     // Declare the path to get patient list
     private final String PATH_PATIENT_LIST = "/getPatientList";
     // Declare the path to get patient
     private final String PATH_PATIENT = "/getPatient";
     //Declare the PatientId parameter name to use in the WebClient request
     private final String PATIENT_ID = "?patientId=";
+    // Declare the path for checking a patient ID
+    private final String PATH_PATIENT_EXIST = "/checkPatientId";
 
     //Define the patients URI (for patient list)
     private final String getListPatientUri() {
@@ -29,6 +37,11 @@ public class PatientWebClientService {
         return BASE_URL + PATH_PATIENT + PATIENT_ID;
     }
 
+    //Define the patients service URI (for checkPatientIdExist)
+    private final String getCheckPatientIdServiceUri() {
+        return BASE_URL_LOCALHOST + PATH_PATIENT_EXIST + PATIENT_ID;
+    }
+
     /**
      * Web Client request to server-service "patients" for getting a list of all patients
      *
@@ -38,19 +51,12 @@ public class PatientWebClientService {
         Flux<PatientModel> getPatientList= WebClient.create()
                 .get()
                 .uri(getListPatientUri())
+
                 .retrieve()
                 .bodyToFlux(PatientModel.class);
         List<PatientModel> patientList = getPatientList.collectList().block();
         return patientList;
     }
-    /*
-                .onStatus(HttpStatus::is4xxClientError, response ->
-                Mono.error(new MyCustomException())
-            )
-            .onStatus(HttpStatus::is5xxServerError, response ->
-                Mono.error(new MyCustomException())
-            )
-     */
 
     /**
      * Web Client request to server-service "patients" for getting a patient according to its patientId
@@ -66,5 +72,21 @@ public class PatientWebClientService {
                 .bodyToMono(PatientModel.class);
         PatientModel patient = getPatient.block();
         return patient;
+    }
+
+    /**
+     * Web Client request to server-service "patients" to check if a patient Id exists
+     *
+     * @param patientId int
+     * @return boolean of patient id exists' query
+     */
+    public boolean checkPatientIdExist(int patientId) {
+        Mono<Boolean> getPatientList= WebClient.create()
+                .get()
+                .uri(getCheckPatientIdServiceUri() + patientId)
+                .retrieve()
+                .bodyToMono(Boolean.class);
+        boolean patientList = getPatientList.block();
+        return patientList;
     }
 }

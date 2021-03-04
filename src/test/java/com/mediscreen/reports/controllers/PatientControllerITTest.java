@@ -15,14 +15,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -90,5 +93,23 @@ public class PatientControllerITTest {
                 .andExpect(model().attributeExists("patients"))
                 .andReturn();
         assertTrue(patientList.get(0).getGivenName().equals("John"));
+    }
+
+    @Test
+    public void getRequestPatientListViewShouldThrowMicroServiceNotFoundException() throws Exception {
+        //1. Setup
+        List<PatientModel> patientList = new ArrayList<>();
+        patientList.add(patientModel1());
+
+            doThrow(WebClientRequestException.class).when(patientWebClientService).getListPatients();
+
+        //2. Act
+        MvcResult result = mockMvc.perform(get("/patient/list"))
+
+                //3. Assert
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("error"))
+                .andReturn();
+        assertTrue(result.getResolvedException().getMessage().contains("Microservices are not running"));
     }
 }

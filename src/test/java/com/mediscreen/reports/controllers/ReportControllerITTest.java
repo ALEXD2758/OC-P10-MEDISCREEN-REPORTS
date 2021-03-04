@@ -1,5 +1,6 @@
 package com.mediscreen.reports.controllers;
 
+import com.mediscreen.reports.exception.PatientIdNotFoundException;
 import com.mediscreen.reports.model.*;
 import com.mediscreen.reports.repository.DiseaseEnum;
 import com.mediscreen.reports.repository.RiskLevelEnum;
@@ -19,8 +20,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -48,15 +52,9 @@ public class ReportControllerITTest {
     private PatientWebClientService patientWebClientService;
 
     @MockBean
-    private AgeCalculatorService ageCalculatorService;
-
-    @MockBean
     private RecordWebClientService recordWebClientService;
 
-
-
     private MockMvc mockMvc;
-
 
     @BeforeEach
     public void setupMockmvc() {
@@ -138,15 +136,19 @@ public class ReportControllerITTest {
         reportModel.setRiskLevel(RiskLevelEnum.NONE);
         listReport.add(reportModel);
 
-
         //ACT
+
+        doReturn(true)
+                .when(patientWebClientService)
+                .checkPatientIdExist(2);
+
         doReturn(patientModel1())
                 .when(patientWebClientService)
                 .getPatient(2);
 
         doReturn(demographicsModel())
                 .when(reportService)
-                .getDemographicsFromPatientModel(patientModel1());
+                .getDemographicsFromPatientModel(2);
 
         doReturn(listNotes)
                 .when(recordWebClientService)
@@ -164,5 +166,65 @@ public class ReportControllerITTest {
                 .andExpect(model().attributeExists("demographicsPatient"))
                 .andExpect(model().attributeExists("reportPatient"))
                 .andReturn();
+    }
+
+    @Test
+    public void getRequestReportingAssessmentViewShouldThrowsPatientIdNotFoundException() throws Exception {
+        //ARRANGE
+        List<PatientModel> patientList = new ArrayList<>();
+        patientList.add(patientModel1());
+
+        List<NoteModel> listNotes = new ArrayList<>();
+        listNotes.add(noteModel1());
+        listNotes.add(noteModel2());
+
+        List<ReportModel> listReport = new ArrayList<>();
+        ReportModel reportModel = new ReportModel();
+        reportModel.setDisease(DiseaseEnum.DIABETES);
+        reportModel.setRiskLevel(RiskLevelEnum.NONE);
+        listReport.add(reportModel);
+
+        //ACT
+        doReturn(false)
+                .when(patientWebClientService)
+                .checkPatientIdExist(2);
+
+        MvcResult result = mockMvc.perform(get("/reporting/assessment/{patientId}", "2"))
+
+                //ASSERT
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("error"))
+                .andReturn();
+        assertTrue(result.getResolvedException().getCause().getMessage().contains("Patient ID not found"));
+    }
+
+    @Test
+    public void getRequestReportingAssessmentViewShouldThrowsMicroServiceNotFoundException() throws Exception {
+        //ARRANGE
+        List<PatientModel> patientList = new ArrayList<>();
+        patientList.add(patientModel1());
+
+        List<NoteModel> listNotes = new ArrayList<>();
+        listNotes.add(noteModel1());
+        listNotes.add(noteModel2());
+
+        List<ReportModel> listReport = new ArrayList<>();
+        ReportModel reportModel = new ReportModel();
+        reportModel.setDisease(DiseaseEnum.DIABETES);
+        reportModel.setRiskLevel(RiskLevelEnum.NONE);
+        listReport.add(reportModel);
+
+        //ACT
+        doThrow(WebClientRequestException.class)
+                .when(patientWebClientService)
+                .checkPatientIdExist(2);
+
+        MvcResult result = mockMvc.perform(get("/reporting/assessment/{patientId}", "2"))
+
+                //ASSERT
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("error"))
+                .andReturn();
+        assertTrue(result.getResolvedException().getMessage().contains("Microservices are not running"));
     }
 }
