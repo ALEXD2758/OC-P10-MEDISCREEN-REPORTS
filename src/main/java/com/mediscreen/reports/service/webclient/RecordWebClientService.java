@@ -21,7 +21,7 @@ public class RecordWebClientService {
 
     //Define the listNotesPatientService URI (for patient list)
     private final String getNotesListPatientServiceUri() {
-        return BASE_URL_LOCALHOST + PATH_NOTE_LIST + PATIENT_ID;
+        return BASE_URL + PATH_NOTE_LIST + PATIENT_ID;
     }
 
     /**

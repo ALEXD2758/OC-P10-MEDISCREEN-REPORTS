@@ -39,7 +39,7 @@ public class PatientWebClientService {
 
     //Define the patients service URI (for checkPatientIdExist)
     private final String getCheckPatientIdServiceUri() {
-        return BASE_URL_LOCALHOST + PATH_PATIENT_EXIST + PATIENT_ID;
+        return BASE_URL + PATH_PATIENT_EXIST + PATIENT_ID;
     }
 
     /**
