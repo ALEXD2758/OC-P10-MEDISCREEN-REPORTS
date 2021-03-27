@@ -1,7 +1,5 @@
 package com.mediscreen.reports.service.webclient;
 
-//import com.mediscreen.reports.exception.PatientIdNotFoundException;
-
 import com.mediscreen.reports.model.PatientModel;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
