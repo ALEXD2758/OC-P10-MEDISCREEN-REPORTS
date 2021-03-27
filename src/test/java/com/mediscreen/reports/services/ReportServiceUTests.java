@@ -54,7 +54,7 @@ public class ReportServiceUTests {
         patientModel1.setId(2);
         patientModel1.setGivenName("John");
         patientModel1.setFamilyName("Boyd");
-        patientModel1.setBirthdate(date);
+        patientModel1.setBirthdate(date.toString());
         patientModel1.setGender("MALE");
         patientModel1.setAddress(addressModel1());
         patientModel1.setEmailAddress("EmailTest1@email.com");

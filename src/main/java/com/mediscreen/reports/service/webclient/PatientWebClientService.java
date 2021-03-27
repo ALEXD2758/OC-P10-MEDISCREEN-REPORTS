@@ -1,15 +1,14 @@
 package com.mediscreen.reports.service.webclient;
 
 //import com.mediscreen.reports.exception.PatientIdNotFoundException;
+
 import com.mediscreen.reports.model.PatientModel;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.net.ConnectException;
 import java.util.List;
 
 @Service
@@ -29,17 +28,17 @@ public class PatientWebClientService {
 
     //Define the patients URI (for patient list)
     private final String getListPatientUri() {
-        return BASE_URL + PATH_PATIENT_LIST;
+        return BASE_URL_LOCALHOST + PATH_PATIENT_LIST;
     }
 
     //Define the patient URI (for getting single patient)
     private final String getPatientUri() {
-        return BASE_URL + PATH_PATIENT + PATIENT_ID;
+        return BASE_URL_LOCALHOST + PATH_PATIENT + PATIENT_ID;
     }
 
     //Define the patients service URI (for checkPatientIdExist)
     private final String getCheckPatientIdServiceUri() {
-        return BASE_URL + PATH_PATIENT_EXIST + PATIENT_ID;
+        return BASE_URL_LOCALHOST + PATH_PATIENT_EXIST + PATIENT_ID;
     }
 
     /**
@@ -51,7 +50,6 @@ public class PatientWebClientService {
         Flux<PatientModel> getPatientList= WebClient.create()
                 .get()
                 .uri(getListPatientUri())
-
                 .retrieve()
                 .bodyToFlux(PatientModel.class);
         List<PatientModel> patientList = getPatientList.collectList().block();
@@ -68,6 +66,7 @@ public class PatientWebClientService {
         Mono<PatientModel> getPatient= WebClient.create()
                 .get()
                 .uri(getPatientUri() + patientId)
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(PatientModel.class);
         PatientModel patient = getPatient.block();

@@ -1,6 +1,6 @@
 package com.mediscreen.reports.model;
 
-import org.joda.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PatientModel {
 
@@ -10,7 +10,8 @@ public class PatientModel {
 
     private String familyName;
 
-    private LocalDate birthdate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private String birthdate;
 
     private String gender;
 
@@ -44,11 +45,11 @@ public class PatientModel {
         this.familyName = familyName;
     }
 
-    public LocalDate getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 
